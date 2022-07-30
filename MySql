@@ -1,0 +1,8 @@
+x-- MYSQL --x
+--------------
+
+Login
+------|
+- mysql -u {username} -p
+- {password}
+
