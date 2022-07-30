@@ -1,0 +1,537 @@
+x-- MYSQL --x
+--------------
+
+Login
+------|
+- mysql -u {username} -p
+- {password}
+
+
+Check Username/Password XAMPP
+------------------------------|
+XAMPP/PHPMyAdmin/Config.inc.php 
+'user'
+'password'
+
+
+Check available databases
+--------------------------
+SHOW DATABASES;
+
+
+Select Database
+---------------
+USE {database_name}
+
+
+Check selected database
+-----------------------
+SELECT DATABASE();
+
+
+Create Database
+---------------
+CREATE DATABASE {database_name};
+
+
+Delete Database;
+DROP DATABASE {database_name}
+
+==============================================================
+
+$$$ ---- MY SQL DATA TYPES ---- $$$
+1. Numeric - int (upto 11 digits signed or unsigned)
+2. Strings - varchar (1 to 255)
+3. Data & Time - YYYY-MM-DD (1000-01-01 to 9999-12-31)
+
+Create table 
+-----------------
+CREATE TABLE {table_name}
+(
+  col_name data_type,
+  col_name2 data_type
+);
+
+
+Check all created tables
+------------------------
+SHOW TABLES;
+
+
+Check details of table
+----------------------
+DESC TABLE table_name;
+
+
+Check details of particular table
+----------------------
+DESC table_name; // similar to 
+SHOW COLUMNS FROM table_name;
+
+
+Delete table
+------------
+DROP TABLE {table_name}
+
+
+Insert table
+------
+INSERT INTO {table_name} 
+(col1, col2, col3) values (val1, 'string', num);
+
+INSERT INTO {table_name} values (2, 'Thapa', 5);
+
+
+Show whole table
+ ---------------
+ SELECT * FROM {table_name};
+
+
+Show warnings
+ -------------
+ SHOW WARNINGS;
+
+
+Null vs not Null
+----------------
+Null - value is unknown
+Not Null - Can not be empty, by default 0 for int
+
+
+default
+-------
+CREATE TABLE table_name
+(
+  col_name data_type NOT NULL DEFAULT value,
+  col_name data_type NOT NULL DEFAULT 'value'
+)
+
+  ex.
+    CREATE TABLE studef
+  (
+    id int(11) NOT NULL DEFAULT 0,
+    name varchar(55) NOT NULL DEFAULT 'unnamed'
+  )
+
+
+Update table - Create new COLUMNS
+--------------------------------
+ALTER TABLE table_name
+ADD column_name data_type;
+
+
+Update table - Delete column_name
+---------------------------------
+ALTER TABLE table_name
+DROP COLUMN column_name;
+
+
+Primary key
+-----------
+CREATE TABLE table_name
+(
+  col_name data_type,
+  col_name2 data_type,
+  PRIMARY KEY(col)
+)
+
+
+eg.  CREATE TABLE stud_unique
+     (        stud_id INT NOT NULL,
+              name VARCHAR(55),
+              age INT,
+              PRIMARY KEY(stud_id)    );
+
+
+Extra - auto increment
+----------------------
+
+
+eg.  CREATE TABLE stud_auto
+     (        stud_id INT NOT NULL AUTO_INCREMENT,
+              name VARCHAR(55),
+              age INT,
+              PRIMARY KEY(stud_id)    );
+
+==============================================================
+
+$$$ ---- CRUD Operation ---- $$$
+Create Read Update Delete
+
+mysql> desc students;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int         | NO   | PRI | NULL    | auto_increment |
+| fname | varchar(55) | YES  |     | NULL    |                |
+| lname | varchar(55) | YES  |     | NULL    |                |
+| age   | int         | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+
+mysql> select * from students;
++----+--------+-----------+------+
+| id | fname  | lname     | age  |
++----+--------+-----------+------+
+|  1 | vinod  | thapa     |   25 |
+|  2 | vinod  | bahadur   |   25 |
+|  3 | naran  | kc        |   28 |
+|  4 | thapa  | technical |   24 |
+|  5 | arjun  | kc        |   26 |
+|  6 | binita | thapa     |   21 |
+|  7 | ramesh | chettri   |   30 |
+|  8 | kanxi  | thapa     |   25 |
++----+--------+-----------+------+
+
+
+Insert data with multiple values
+--------------------------------
+
+insert into students (fname, lname, age) values ('vinod', 'thapa', 25),
+    ('vinod', 'bahadur', 25),
+    ('naran', 'kc', 28),
+    ('thapa', 'technical', 24),
+    ('arjun', 'kc', 26),
+    ('binita', 'thapa', 21),
+    ('ramesh', 'chettri', 30),
+    ('kanxi', 'thapa', 25);
+
+Where clause - Filter records
+--------------------------
+mysql> select * from students where age = 25;
++----+-------+---------+------+
+| id | fname | lname   | age  |
++----+-------+---------+------+
+|  1 | vinod | thapa   |   25 |
+|  2 | vinod | bahadur |   25 |
+|  8 | kanxi | thapa   |   25 |
++----+-------+---------+------+---
+
+
+
+Update records
+--------------
+UPDATE table_name
+SET col_name = value
+WHERE col_name = value;
+
+Eg. 
+UPDATE students
+SET age = 23
+WHERE fname = 'ramesh';
+
+Eg. primary key 
+UPDATE students
+SET age = 21
+WHERE id = 7;
+
+
+Delete records
+--------------
+-> Write select query then change select to Update
+ eg. select * from students where fname = 'naran';
+ eg. delete from students where fname = 'naran';
+
+
+Distinct - use with only one field
+--------
+mysql> select fname from students;
++--------+
+| fname  |
++--------+
+| vinod  |
+| vinod  |
+| thapa  |
+| arjun  |
+| binita |
+| ramesh |
+| kanxi  |
++--------+
+
+mysql> select distinct fname from students;
++--------+
+| fname  |
++--------+
+| vinod  |
+-- | vinod  |
+| thapa  |
+| arjun  |
+| binita |
+| ramesh |
+| kanxi  |
++--------+
+
+
+Order by - get result in ascending or descending Order
+-----------------------------------------------------
+mysql> select age from students order by age;
++------+
+| age  |
++------+
+|   21 |
+|   21 |
+|   24 |
+|   25 |
+|   25 |
+|   25 |
+|   26 |
++------+
+
+Sort in ascending order of age with distinct
+-------------------------------
+mysql> select distinct age from students order by age;
++------+
+| age  |
++------+
+|   21 |
+|   24 |
+|   25 |
+|   26 |
++------+
+
+Sort in ascending order of name
+-------------------------------
+mysql> select distinct fname from students order by fname;
++--------+
+| fname  |
++--------+
+| arjun  |
+| binita |
+| kanxi  |
+| ramesh |
+| thapa  |
+| vinod  |
+
+Limit result
+--------
+mysql> select distinct fname from students order by fname limit 3;
++--------+
+| fname  |
++--------+
+| arjun  |
+| binita |
+| kanxi  |
++--------+
+
+
+Column contains - 'in' anything before after
+--------------------------------------------
+mysql> select fname from students where fname like '%in%';
++--------+
+| fname  |
++--------+
+| vinod  |
+| vinod  |
+| binita |
++--------+
+
+==============================================================
+
+Aggregreate function
+---------------------
+Count, Max, Min, Avg, Sum
+
+mysql> select count(age) from students;
++------------+
+| count(age) |
++------------+
+|          7 |
++------------+
+
+mysql> select min(age) from students;
++----------+
+| min(age) |
++----------+
+|       21 |
++----------+
+
+mysql> select max(age) from students;
++----------+
+| max(age) |
++----------+
+|       26 |
++----------+
+
+mysql> select sum(age) from students;
++----------+
+| sum(age) |
++----------+
+|      167 |
++----------+
+
+mysql> select avg(age) from students;
++----------+
+| avg(age) |
++----------+
+|  23.8571 |
++----------+
+
+==============================================================
+Logical operators:
+
+mysql> select * from students where age != 25;
++----+--------+-----------+------+
+| id | fname  | lname     | age  |
++----+--------+-----------+------+
+|  4 | thapa  | technical |   24 |
+|  5 | arjun  | kc        |   26 |
+|  6 | binita | thapa     |   21 |
+|  7 | ramesh | chettri   |   21 |
++----+--------+-----------+------+
+
+mysql> select * from students where age > 25;
++----+-------+-------+------+
+| id | fname | lname | age  |
++----+-------+-------+------+
+|  5 | arjun | kc    |   26 |
++----+-------+-------+------+
+
+mysql> select * from students where age < 25;
++----+--------+-----------+------+
+| id | fname  | lname     | age  |
++----+--------+-----------+------+
+|  4 | thapa  | technical |   24 |
+|  6 | binita | thapa     |   21 |
+|  7 | ramesh | chettri   |   21 |
++----+--------+-----------+------+
+
+mysql> select * from students where age > 20 && age < 25;
++----+--------+-----------+------+
+| id | fname  | lname     | age  |
++----+--------+-----------+------+
+|  4 | thapa  | technical |   24 |
+|  6 | binita | thapa     |   21 |
+|  7 | ramesh | chettri   |   21 |
++----+--------+-----------+------+
+
+mysql> select * from students where age between 20 and 25;
++----+--------+-----------+------+
+| id | fname  | lname     | age  |
++----+--------+-----------+------+
+|  1 | vinod  | thapa     |   25 |
+|  2 | vinod  | bahadur   |   25 |
+|  4 | thapa  | technical |   24 |
+|  6 | binita | thapa     |   21 |
+|  7 | ramesh | chettri   |   21 |
+|  8 | kanxi  | thapa     |   25 |
++----+--------+-----------+------+
+
+mysql> select * from students where age >= 20 && age <= 25;
++----+--------+-----------+------+
+| id | fname  | lname     | age  |
++----+--------+-----------+------+
+|  1 | vinod  | thapa     |   25 |
+|  2 | vinod  | bahadur   |   25 |
+|  4 | thapa  | technical |   24 |
+|  6 | binita | thapa     |   21 |
+|  7 | ramesh | chettri   |   21 |
+|  8 | kanxi  | thapa     |   25 |
++----+--------+-----------+------+
+
+mysql> select * from students where age not  between 20 and 25;
++----+-------+-------+------+
+| id | fname | lname | age  |
++----+-------+-------+------+
+|  5 | arjun | kc    |   26 |
++----+-------+-------+------+
+
+Perform same using - 'IN'
+--------------------------
+mysql> select * from students
+    -> where fname = 'vinod' or fname = 'binita';
++----+--------+---------+------+
+| id | fname  | lname   | age  |
++----+--------+---------+------+
+|  1 | vinod  | thapa   |   25 |
+|  2 | vinod  | bahadur |   25 |
+|  6 | binita | thapa   |   21 |
++----+--------+---------+------+
+
+mysql> select * from students where fname in ('vinod','binita');
++----+--------+---------+------+
+| id | fname  | lname   | age  |
++----+--------+---------+------+
+|  1 | vinod  | thapa   |   25 |
+|  2 | vinod  | bahadur |   25 |
+|  6 | binita | thapa   |   21 |
++----+--------+---------+------+
+
+mysql> select concat ('vinod', ' ', 'thapa');
++--------------------------------+
+| concat ('vinod', ' ', 'thapa') |
++--------------------------------+
+| vinod thapa                    |
++--------------------------------+
+
+mysql> select concat ('vinod', ' ', 'thapa') as fullname;
++-------------+
+| fullname    |
++-------------+
+| vinod thapa |
++-------------+
+
+mysql> select concat(fname, ' ', lname) from students as fullname;
++---------------------------+
+| concat(fname, ' ', lname) |
++---------------------------+
+| vinod thapa               |
+| vinod bahadur             |
+| thapa technical           |
+| arjun kc                  |
+| binita thapa              |
+| ramesh chettri            |
+| kanxi thapa               |
++---------------------------+
+
+mysql> select reverse('thapa') as reverse;
++---------+
+| reverse |
++---------+
+| apaht   |
++---------+
+
+mysql> select char_length('thapa');
++----------------------+
+| char_length('thapa') |
++----------------------+
+|                    5 |
++----------------------+
+
+mysql> select upper('thapa');
++----------------+
+| upper('thapa') |
++----------------+
+| THAPA          |
++----------------+
+
+mysql> select upper(fname) from students;
++--------------+
+| upper(fname) |
++--------------+
+| VINOD        |
+| VINOD        |
+| THAPA        |
+| ARJUN        |
+| BINITA       |
+| RAMESH       |
+| KANXI        |
++--------------+
+
+mysql> select lower(fname) from students;
++--------------+
+| lower(fname) |
++--------------+
+| vinod        |
+| vinod        |
+| thapa        |
+| arjun        |
+| binita       |
+| ramesh       |
+| kanxi        |
++--------------+
+
+
+Tips: 
+1. Use arrow keys to use old commands.
+2. Ctrl + c to exit query
+3. show errors;
+
