@@ -6,3 +6,8 @@ Login
 - mysql -u {username} -p
 - {password}
 
+Check Username/Password XAMPP
+------------------------------|
+XAMPP/PHPMyAdmin/Config.inc.php 
+'user'
+'password'
